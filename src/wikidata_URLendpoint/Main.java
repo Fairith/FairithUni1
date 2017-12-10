@@ -5,14 +5,19 @@ import com.bordercloud.sparql.EndpointException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Main {
 
   public static void main(String[] args) {
+	  Scanner input = new Scanner(System.in);
+      String toTranslate = "Isomorphism";
+      String targetLanguage = "de";
+	  System.out.println("Enter English Word to translate: ");
+	  toTranslate = input.next();
+	  
       try {
           Endpoint sp = new Endpoint("https://query.wikidata.org/sparql", true);
-          String toTranslate = "Isomorphism";
-          String targetLanguage = "de";
           
           String querySelect = "SELECT ?itemurl ?lang1 ?lang2 WHERE {\n" +
               "  ?itemurl rdfs:label ?lang1 ,\n" +
@@ -23,7 +28,7 @@ public class Main {
               "}";
           
           HashMap rs = sp.query(querySelect);
-          
+          /** 
           HashMap results = (HashMap) rs.get("result");
           printResult(rs,50);
           viewHashs(rs);
@@ -32,8 +37,8 @@ public class Main {
           System.out.println("-------------------------");
           System.out.println(retResults(rs));
           System.out.println("-------------------------");
+          **/
           String[] translations = retLang(rs);
-          
           for(int i = 0; i < translations.length; i++) {
         	  System.out.println(translations[i]);
           }
