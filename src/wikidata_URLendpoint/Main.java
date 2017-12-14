@@ -28,7 +28,7 @@ public class Main {
               "}";
           
           HashMap rs = sp.query(querySelect);
-          /** 
+          
           HashMap results = (HashMap) rs.get("result");
           printResult(rs,50);
           viewHashs(rs);
@@ -37,7 +37,7 @@ public class Main {
           System.out.println("-------------------------");
           System.out.println(retResults(rs));
           System.out.println("-------------------------");
-          **/
+          
           String[] translations = retLang(rs);
           for(int i = 0; i < translations.length; i++) {
         	  System.out.println(translations[i]);
