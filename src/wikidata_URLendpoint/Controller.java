@@ -1,4 +1,8 @@
 package wikidata_URLendpoint;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 //Controller.java
 //(C) Joseph Mack 2011, jmack (at) wm7d (dot) net, released under GPL v3 (or any later version)
 
@@ -6,7 +10,7 @@ package wikidata_URLendpoint;
 
 //Controller is a Listener
 
-class Controller implements java.awt.event.ActionListener {
+class Controller implements ActionListener {
 
 	//Joe: Controller has Model and View hardwired in
 	Model model;
@@ -17,7 +21,7 @@ class Controller implements java.awt.event.ActionListener {
 	} //Controller()
 
 	//invoked when a button is pressed
-	public void actionPerformed(java.awt.event.ActionEvent e){
+	public void actionPerformed(ActionEvent e){
 		//uncomment to see what action happened at view
 		/*
 		System.out.println ("Controller: The " + e.getActionCommand() 
@@ -25,7 +29,8 @@ class Controller implements java.awt.event.ActionListener {
 			+ " with e.paramString " + e.paramString() );
 		*/
 		System.out.println("Controller: acting on Model");
-		model.incrementValue();
+		//model.incrementValue();
+		model.translation(view.getTerm());
 	} //actionPerformed()
 
 	//Joe I should be able to add any model/view with the correct API
@@ -41,7 +46,7 @@ class Controller implements java.awt.event.ActionListener {
 	} //addView()
 
 	public void initModel(int x){
-		model.setValue(x);
+		//model.setValue(x);
 	} //initModel()
 
 } //Controller

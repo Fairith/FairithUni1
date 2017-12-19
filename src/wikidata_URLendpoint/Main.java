@@ -13,19 +13,21 @@ public class Main {
 	  Scanner input = new Scanner(System.in);
       String toTranslate = "Isomorphism";
       String targetLanguage = "de";
-	  System.out.println("Enter English Word to translate: ");
-	  toTranslate = input.next();
+	  //System.out.println("Enter English Word to translate: ");
+	  //toTranslate = input.next();
 	  
       try {
-          Endpoint sp = new Endpoint("https://query.wikidata.org/sparql", true);
+          Endpoint sp = new Endpoint("https://query.wikidata.org/sparql", false);
           
-          String querySelect = "SELECT ?itemurl ?lang1 ?lang2 WHERE {\n" +
-              "  ?itemurl rdfs:label ?lang1 ,\n" +
-              "        ?lang2 .\n" +
-              "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
-              "  VALUES ?lang1 {\""+ toTranslate +"\"@en} .\n" +
-              "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
-              "}";
+          String querySelect = "SELECT ?itemurl ?lang1 ?lang2 ?desc WHERE {\n" +
+                  "  ?itemurl rdfs:label ?lang1 ,\n" +
+                  "        ?lang2 .\n" +
+                  "  OPTIONAL {?itemurl schema:description ?desc. FILTER (LANG(?desc) = \"" + targetLanguage +"\").}\n" +
+                  "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
+                  "  VALUES ?lang1 {\""+ toTranslate +"\"@en} .\n" +
+                  "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
+                  "}";
+          
           
           HashMap rs = sp.query(querySelect);
           
@@ -39,8 +41,9 @@ public class Main {
           System.out.println("-------------------------");
           
           String[] translations = retLang(rs);
+          String[] descriptions = retDesc(rs);
           for(int i = 0; i < translations.length; i++) {
-        	  System.out.println(translations[i]);
+        	  System.out.println(translations[i] + " | " + descriptions[i]);
           }
           
           
@@ -62,6 +65,21 @@ public class Main {
 	  for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) rs.get("result").get("rows")) {
 		  //toReturn += value.get("lang2") + " | ";
 		  toReturn[i] = (String) value.get("lang2");
+		  i++;
+        }
+	  return toReturn;
+  }
+  
+  public static String[] retDesc(HashMap<String, HashMap> rs) {
+	  int size = 0;
+	  int i = 0;
+	  for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) rs.get("result").get("rows")) {
+		  size++;
+        }
+	  String[] toReturn = new String[size];
+	  for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) rs.get("result").get("rows")) {
+		  //toReturn += value.get("lang2") + " | ";
+		  toReturn[i] = (String) value.get("desc");
 		  i++;
         }
 	  return toReturn;

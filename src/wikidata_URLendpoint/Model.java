@@ -1,4 +1,12 @@
 package wikidata_URLendpoint;
+
+import com.bordercloud.sparql.Endpoint;
+import com.bordercloud.sparql.EndpointException;
+
+import java.util.Observable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 //Model.java
 //(C) Joseph Mack 2011, jmack (at) wm7d (dot) net, released under GPL v3 (or any later version)
 
@@ -8,10 +16,12 @@ package wikidata_URLendpoint;
 //Model is an Observable
 //Model doesn't know about View or Controller
 
-public class Model extends java.util.Observable {	
+public class Model extends Observable {	
 	
 	private int counter;	//primitive, automatically initialised to 0
-
+	private String[] translation;
+	private String[] descriptions;
+	
 	public Model(){
 
 		System.out.println("Model()");
@@ -48,22 +58,104 @@ public class Model extends java.util.Observable {
 
 	//uncomment this if View is using Model Pull to get the counter
 	//not needed if getting counter from notifyObservers()
-	//public int getValue(){return counter;}
+	public int getValue(){return counter;}
 
 	//notifyObservers()
 	//model sends notification to view because of RunMVC: myModel.addObserver(myView)
 	//myView then runs update()
 	//
 	//model Push - send counter as part of the message
+	
+	public void setTranslations(String[] s) {
+		this.translation = s;
+		for(int i = 0; i < s.length; i++) {
+			System.out.println(s[i]);
+		}
+	}
+	
+	public void setDescriptions(String[] s) {
+		this.descriptions = s;
+	}
+	
+	public String[] getTranslations() {
+		return this.translation;
+	}
+	
+	public String[] getDescriptions() {
+		return this.descriptions;
+	}
+	
+	
+	public void translation(String term) {
+		String toTranslate = term;
+		//TODO: für's schnellere Testen; Später löschen.
+		if(toTranslate=="") {
+			toTranslate = "Isomorphism";
+		}
+	    String targetLanguage = "de";
+		
+	    String querySelect = "SELECT ?itemurl ?lang1 ?lang2 ?desc WHERE {\n" +
+	            "  ?itemurl rdfs:label ?lang1 ,\n" +
+	            "        ?lang2 .\n" +
+	            "  OPTIONAL {?itemurl schema:description ?desc. FILTER (LANG(?desc) = \"" + targetLanguage +"\").}\n" +
+	            "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
+	            "  VALUES ?lang1 {\""+ toTranslate +"\"@en} .\n" +
+	            "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
+	            "}";
+		
+		try {
+	        Endpoint ep = new Endpoint("https://query.wikidata.org/sparql", true);
+	        HashMap result = ep.query(querySelect);
+	  		
+	        setTranslations(extractTranslations(result));
+	        setDescriptions(extractDescriptions(result));
+	        
+	        setChanged();
+	        notifyObservers();
+	          
+	      }catch(EndpointException eex) {
+	          System.out.println(eex);
+	          eex.printStackTrace();
+	      }
+	}
+	
+	private String[] extractTranslations(HashMap<String, HashMap> hs) {
+		int size = 0;
+		int i = 0;
+		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
+		  size++;
+	    }
+		String[] toReturn = new String[size];
+		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
+		  toReturn[i] = (String) value.get("lang2");
+		  i++;
+	    }
+		return toReturn;
+	}
+	
+	private String[] extractDescriptions(HashMap<String, HashMap> hs) {
+		int size = 0;
+		int i = 0;
+		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
+		  size++;
+	    }
+		String[] toReturn = new String[size];
+		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
+		  toReturn[i] = (String) value.get("desc");
+		  i++;
+	    }
+		return toReturn;
+	}
+	
 	public void setValue(int value) {
 
 		this.counter = value;
 		System.out.println("Model init: counter = " + counter);
 		setChanged();
 		//model Push - send counter as part of the message
-		notifyObservers(counter);
+		//notifyObservers(counter);
 		//if using Model Pull, then can use notifyObservers()
-		//notifyObservers()
+		notifyObservers();
 
 	} //setValue()
 	
@@ -73,9 +165,9 @@ public class Model extends java.util.Observable {
 		System.out.println("Model     : counter = " + counter);
 		setChanged();
 		//model Push - send counter as part of the message
-		notifyObservers(counter);
+		//notifyObservers(counter);
 		//if using Model Pull, then can use notifyObservers()
-		//notifyObservers()
+		notifyObservers();
 
 	} //incrementValue()
 	

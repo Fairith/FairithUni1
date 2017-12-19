@@ -27,13 +27,14 @@ public class StartMVC {
 		Controller myController = new Controller();
 		myController.addModel(myModel);
 		myController.addView(myView);
-		myController.initModel(start_value);
+		//myController.initModel(start_value);
 
 		//tell View about Controller 
 		myView.addController(myController);
 		//and Model, 
 		//this was only needed when the view inits the model
-		//myView.addModel(myModel);
+		myView.addModel(myModel);
+		//myController.initModel(start_value);
 
 	} //RunMVC()
 	
