@@ -20,6 +20,7 @@ public class StartMVC {
 	public static void main(String[] args){
 
 		StartMVC mainRunMVC = new StartMVC();
+		//http://www.java-examples.com/create-awt-choice-or-combobox-example
 
 	}
 

@@ -17,7 +17,10 @@ class View implements Observer {
 
 	private Frame mainFrame;
 	private Label headerLabel;
+	private Label tmp1;
+	private Label tmp2;
 	private Panel controlPanel;
+	private Panel headPanel;
 	private Button btn_translate;
 	private TextField txf_input;
 	private TextArea txa_output;
@@ -25,7 +28,7 @@ class View implements Observer {
 	private Model model;		
 	
 	View() {
-		System.out.println("View()");	
+		//System.out.println("View()");	
 		
 		mainFrame = new Frame("Mighty Translator");
 	    mainFrame.setSize(800,400);
@@ -34,20 +37,29 @@ class View implements Observer {
 	    
 	    headerLabel = new Label("Enter an english term to translate");
 	    headerLabel.setAlignment(Label.CENTER);
-
+	    tmp1 = new Label("temp1");
+	    tmp2 = new Label("temp2");
+	    
+	    headPanel = new Panel();
+	    headPanel.setLayout(new GridLayout(1,3));
+	    
 	    controlPanel = new Panel();
-	    controlPanel.setLayout(new GridLayout(1,2));
+	    controlPanel.setLayout(new GridLayout(1,3));
 	    
 	    btn_translate = new Button("Translate");
 	    txf_input = new TextField("");
 	    txa_output = new TextArea ("");
+	    
+	    headPanel.add(tmp1);
+	    headPanel.add(headerLabel);
+	    headPanel.add(tmp2);
 	    
 	    controlPanel.add(txf_input);
 	    controlPanel.add(btn_translate);
 	    controlPanel.add(txa_output);
 	    
 
-	    mainFrame.add(headerLabel);
+	    mainFrame.add(headPanel);
 	    mainFrame.add(controlPanel);
 	    mainFrame.addWindowListener(new CloseListener());
 	    mainFrame.setVisible(true);

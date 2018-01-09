@@ -41,10 +41,11 @@ public class Model extends Observable {
 		}
 	    String targetLanguage = "de";
 		
-	    String querySelect = "SELECT ?itemurl ?lang1 ?lang2 ?desc WHERE {\n" +
+	    String querySelect = "SELECT ?itemurl ?link ?lang1 ?lang2 ?desc WHERE {\n" +
 	            "  ?itemurl rdfs:label ?lang1 ,\n" +
 	            "        ?lang2 .\n" +
 	            "  OPTIONAL {?itemurl schema:description ?desc. FILTER (LANG(?desc) = \"" + targetLanguage +"\").}\n" +
+	            "  OPTIONAL {?link schema:about ?itemurl ; schema:isPartOf <https://"+ targetLanguage +".wikipedia.org/> .}\n" +
 	            "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
 	            "  VALUES ?lang1 {\""+ toTranslate +"\"@en} .\n" +
 	            "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
@@ -64,6 +65,20 @@ public class Model extends Observable {
 	          System.out.println(eex);
 	          eex.printStackTrace();
 	      }
+	}
+	
+	private String[] extractLinks(HashMap<String, HashMap> hs) {
+		int size = 0;
+		int i = 0;
+		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
+		  size++;
+	    }
+		String[] toReturn = new String[size];
+		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
+		  toReturn[i] = (String) value.get("link");
+		  i++;
+	    }
+		return toReturn;
 	}
 	
 	private String[] extractTranslations(HashMap<String, HashMap> hs) {
