@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/httpclient-win-4.5.3.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.4.6.jar"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.5.3.jar"/>
+	<classpathentry kind="lib" path="lib/jsoup-1.11.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -3,9 +3,16 @@ package wikidata_URLendpoint;
 import com.bordercloud.sparql.Endpoint;
 import com.bordercloud.sparql.EndpointException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 
 public class Main {
 
@@ -19,10 +26,11 @@ public class Main {
       try {
           Endpoint sp = new Endpoint("https://query.wikidata.org/sparql", false);
           
-          String querySelect = "SELECT ?itemurl ?lang1 ?lang2 ?desc WHERE {\n" +
+          String querySelect = "SELECT ?itemurl ?link ?lang1 ?lang2 ?desc WHERE {\n" +
                   "  ?itemurl rdfs:label ?lang1 ,\n" +
                   "        ?lang2 .\n" +
                   "  OPTIONAL {?itemurl schema:description ?desc. FILTER (LANG(?desc) = \"" + targetLanguage +"\").}\n" +
+                  "  OPTIONAL {?link schema:about ?itemurl ; schema:isPartOf <https://"+ targetLanguage +".wikipedia.org/> .}\n" +
                   "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
                   "  VALUES ?lang1 {\""+ toTranslate +"\"@en} .\n" +
                   "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
@@ -45,6 +53,9 @@ public class Main {
           for(int i = 0; i < translations.length; i++) {
         	  System.out.println(translations[i] + " | " + descriptions[i]);
           }
+          System.out.println("--------------------------------------");
+          getContent("https://de.wikipedia.org/wiki/Blei(II)-hexafluorosilicat");
+          //getContent2(".");
           
           
       }catch(EndpointException eex) {
@@ -52,8 +63,43 @@ public class Main {
           eex.printStackTrace();
       }
   }
+
+
+
+//public static void getContent2(String url) {
+//	try {
+//		Document doc = Jsoup.connect("http://en.wikipedia.org/wiki/Boston").get();
+//		Element contentDiv = doc.select("div[id=content]").first();
+//		//contentDiv.toString(); // The result
+//		System.out.println(contentDiv.toString());
+//	} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//}
   
-  
+public static void getContent(String url) {
+	try {
+		Document doc = Jsoup.connect(url).get();
+		Elements paragraphs = doc.select(".mw-content-ltr p");
+		
+		Element firstParagraph = paragraphs.first();
+		Element lastParagraph = paragraphs.last();
+		Element p;
+		int i=1;
+		p=firstParagraph;
+		System.out.println(p.text());
+		while (p!=lastParagraph){
+		    p=paragraphs.get(i);
+		    System.out.println(p.text());
+		    i++;
+		}
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
   
   public static String[] retLang(HashMap<String, HashMap> rs) {
 	  int size = 0;
