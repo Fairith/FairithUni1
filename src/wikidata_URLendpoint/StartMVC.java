@@ -18,7 +18,8 @@ public class StartMVC {
 	}
 	
 	public static void main(String[] args){
-
+		//TODO: Zeitplan / zeiten aufschreiben
+		//TODO: Zukunfts-Ausblick: Fehler finden / Korrigieren -> Endpoint POST-request true/false :D 
 		StartMVC mainRunMVC = new StartMVC();
 
 	}
