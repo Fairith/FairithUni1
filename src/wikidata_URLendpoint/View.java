@@ -28,8 +28,11 @@ class View implements Observer {
 	private Model model;		
 	
 	View() {
+<<<<<<< HEAD
 		//System.out.println("View()");	
 		
+=======
+>>>>>>> 8ec7e71a8a02a77307ce5ed9b91455467bf305ec
 		mainFrame = new Frame("Mighty Translator");
 	    mainFrame.setSize(800,400);
 	    mainFrame.setLocation(200, 200);
