@@ -11,6 +11,8 @@ import java.util.HashMap;
 public class Model extends Observable {	
 	private String[] translation;
 	private String[] descriptions;
+	private String originLanguage = "en";
+	private String targetLanguage = "de";
 	
 	public Model(){
 
@@ -32,6 +34,14 @@ public class Model extends Observable {
 		return this.descriptions;
 	}
 	
+	public void setOriginLanguage(String orgLng) {
+		this.originLanguage = orgLng;
+	}
+	
+	public void setTargetLanguage(String trgLng) {
+		this.targetLanguage = trgLng;
+	}
+	
 	
 	public void translation(String term) {
 		String toTranslate = term;
@@ -39,7 +49,7 @@ public class Model extends Observable {
 		if(toTranslate=="") {
 			toTranslate = "Isomorphism";
 		}
-	    String targetLanguage = "de";
+	    //String targetLanguage = "de";
 		
 	    String querySelect = "SELECT ?itemurl ?link ?lang1 ?lang2 ?desc WHERE {\n" +
 	            "  ?itemurl rdfs:label ?lang1 ,\n" +
@@ -47,7 +57,7 @@ public class Model extends Observable {
 	            "  OPTIONAL {?itemurl schema:description ?desc. FILTER (LANG(?desc) = \"" + targetLanguage +"\").}\n" +
 	            "  OPTIONAL {?link schema:about ?itemurl ; schema:isPartOf <https://"+ targetLanguage +".wikipedia.org/> .}\n" +
 	            "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
-	            "  VALUES ?lang1 {\""+ toTranslate +"\"@en} .\n" +
+	            "  VALUES ?lang1 {\""+ toTranslate +"\"@"+originLanguage +"} .\n" +
 	            "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
 	            "}";
 		

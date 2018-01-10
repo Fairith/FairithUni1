@@ -1,5 +1,6 @@
 package wikidata_URLendpoint;
 import java.awt.Button;
+import java.awt.Choice;
 import java.awt.Panel;
 import java.awt.TextArea;
 import java.awt.Frame;
@@ -24,15 +25,13 @@ class View implements Observer {
 	private Button btn_translate;
 	private TextField txf_input;
 	private TextArea txa_output;
+	private Choice originLanguage;
+	private Choice targetLanguage;
 
 	private Model model;		
 	
 	View() {
-<<<<<<< HEAD
 		//System.out.println("View()");	
-		
-=======
->>>>>>> 8ec7e71a8a02a77307ce5ed9b91455467bf305ec
 		mainFrame = new Frame("Mighty Translator");
 	    mainFrame.setSize(800,400);
 	    mainFrame.setLocation(200, 200);
@@ -42,6 +41,17 @@ class View implements Observer {
 	    headerLabel.setAlignment(Label.CENTER);
 	    tmp1 = new Label("temp1");
 	    tmp2 = new Label("temp2");
+	    
+	    originLanguage = new Choice();
+	    originLanguage.add("de");
+	    originLanguage.add("en");
+	    originLanguage.add("fr");
+	    
+	    targetLanguage = new Choice();
+	    targetLanguage.add("de");
+	    targetLanguage.add("en");
+	    targetLanguage.add("fr");
+	    
 	    
 	    headPanel = new Panel();
 	    headPanel.setLayout(new GridLayout(1,3));
@@ -53,9 +63,9 @@ class View implements Observer {
 	    txf_input = new TextField("");
 	    txa_output = new TextArea ("");
 	    
-	    headPanel.add(tmp1);
+	    headPanel.add(originLanguage);
 	    headPanel.add(headerLabel);
-	    headPanel.add(tmp2);
+	    headPanel.add(targetLanguage);
 	    
 	    controlPanel.add(txf_input);
 	    controlPanel.add(btn_translate);
@@ -71,7 +81,8 @@ class View implements Observer {
 	public void update(Observable obs, Object obj) {
 		
     	txa_output.setText("");
-    	
+    	model.setOriginLanguage(originLanguage.getSelectedItem());
+    	model.setTargetLanguage(targetLanguage.getSelectedItem());
     	String[] translations = model.getTranslations();
     	String[] descriptions = model.getDescriptions();
     	
