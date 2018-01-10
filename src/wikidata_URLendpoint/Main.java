@@ -54,7 +54,7 @@ public class Main {
         	  System.out.println(translations[i] + " | " + descriptions[i]);
           }
           System.out.println("--------------------------------------");
-          getContent("https://de.wikipedia.org/wiki/Blei(II)-hexafluorosilicat");
+          getContent("https://de.wikipedia.org/wiki/Zahl_(Begriffskl%C3%A4rung)");
           //getContent2(".");
           
           
