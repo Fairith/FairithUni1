@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -54,7 +55,7 @@ public class Main {
         	  System.out.println(translations[i] + " | " + descriptions[i]);
           }
           System.out.println("--------------------------------------");
-          getContent("https://de.wikipedia.org/wiki/Zahl_(Begriffskl%C3%A4rung)");
+          getContent("https://en.wikipedia.org/wiki/B_cell");
           //getContent2(".");
           
           
@@ -89,16 +90,29 @@ public static void getContent(String url) {
 		int i=1;
 		p=firstParagraph;
 		System.out.println(p.text());
-		while (p!=lastParagraph){
-		    p=paragraphs.get(i);
-		    System.out.println(p.text());
-		    i++;
-		}
+//		while (p!=lastParagraph){
+//		    p=paragraphs.get(i);
+//		    System.out.println(p.text());
+//		    i++;
+//		}
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 }
+
+public static void getContent3(String url) {
+	try {
+		Response response = Jsoup.connect(url).execute();
+		String[] bodyLines = response.body().split("\n");
+		String firstLine = bodyLines[0];
+		System.out.println(firstLine);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
 
   
   public static String[] retLang(HashMap<String, HashMap> rs) {

@@ -85,9 +85,10 @@ class View implements Observer {
     	model.setTargetLanguage(targetLanguage.getSelectedItem());
     	String[] translations = model.getTranslations();
     	String[] descriptions = model.getDescriptions();
+    	String[] wikiContent = model.getWikiContent();
     	
     	for(int i = 0; i < translations.length; i++) {
-    		txa_output.append(translations[i] + " | " + descriptions[i] + "\n");
+    		txa_output.append(translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n");
     	}
     }
 	

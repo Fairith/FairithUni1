@@ -4,18 +4,36 @@ import com.bordercloud.sparql.Endpoint;
 import com.bordercloud.sparql.EndpointException;
 
 import java.util.Observable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 
 
 public class Model extends Observable {	
 	private String[] translation;
 	private String[] descriptions;
+	private String[] wikiContent;
+	private String[] links;
 	private String originLanguage = "en";
 	private String targetLanguage = "de";
 	
 	public Model(){
 
+	}
+	
+	public void setLinks(String[] s) {
+		this.links = s;
+	}
+	
+	public void setWikiContent(String[] s) {
+		this.wikiContent = s;
 	}
 	
 	public void setTranslations(String[] s) {
@@ -25,7 +43,14 @@ public class Model extends Observable {
 	public void setDescriptions(String[] s) {
 		this.descriptions = s;
 	}
+	public void setOriginLanguage(String orgLng) {
+		this.originLanguage = orgLng;
+	}
 	
+	public void setTargetLanguage(String trgLng) {
+		this.targetLanguage = trgLng;
+	}
+// ------------------------------------------------------- \\
 	public String[] getTranslations() {
 		return this.translation;
 	}
@@ -34,14 +59,13 @@ public class Model extends Observable {
 		return this.descriptions;
 	}
 	
-	public void setOriginLanguage(String orgLng) {
-		this.originLanguage = orgLng;
+	public String[] getLinks() {
+		return this.links;
 	}
 	
-	public void setTargetLanguage(String trgLng) {
-		this.targetLanguage = trgLng;
+	public String[] getWikiContent() {
+		return this.wikiContent;
 	}
-	
 	
 	public void translation(String term) {
 		String toTranslate = term;
@@ -67,6 +91,8 @@ public class Model extends Observable {
 	  		
 	        setTranslations(extractTranslations(result));
 	        setDescriptions(extractDescriptions(result));
+	        setLinks(extractLinks(result));
+	        setWikiContent(extractWikiContent(getLinks()));
 	        
 	        setChanged();
 	        notifyObservers();
@@ -116,6 +142,32 @@ public class Model extends Observable {
 		  toReturn[i] = (String) value.get("desc");
 		  i++;
 	    }
+		return toReturn;
+	}
+	
+	private String[] extractWikiContent(String[] urls) {
+		String[] toReturn = new String[urls.length];
+		try {
+			for(int i = 0; i < urls.length; i++) {
+				Document doc = Jsoup.connect(urls[i]).get();
+				Elements paragraphs = doc.select(".mw-content-ltr p");	
+				Element firstParagraph = paragraphs.first();
+				//Element lastParagraph = paragraphs.last();
+				Element p;
+				int j=1;
+				p=firstParagraph;
+				toReturn[i] = p.text();
+				System.out.println(p.text());
+//				while (p!=lastParagraph){
+//				    p=paragraphs.get(i);
+//				    System.out.println(p.text());
+//				    i++;
+//				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return toReturn;
 	}
 }
