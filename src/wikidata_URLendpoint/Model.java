@@ -157,7 +157,7 @@ public class Model extends Observable {
 				int j=1;
 				p=firstParagraph;
 				toReturn[i] = p.text();
-				System.out.println(p.text());
+//				System.out.println(p.text());
 //				while (p!=lastParagraph){
 //				    p=paragraphs.get(i);
 //				    System.out.println(p.text());
