@@ -51,6 +51,7 @@ class View implements Observer {
 	    targetLanguage.add("de");
 	    targetLanguage.add("en");
 	    targetLanguage.add("fr");
+	    targetLanguage.select(1); //selected at init
 	    
 	    
 	    headPanel = new Panel();
