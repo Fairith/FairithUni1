@@ -25,7 +25,7 @@ public class Model extends Observable {
 	private String targetLanguage = "de";
 	
 	public Model(){
-
+//		System.out.println("Model");
 	}
 	
 	public void setLinks(String[] s) {

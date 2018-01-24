@@ -21,8 +21,6 @@ public class StartMVC {
 		//TODO: Zeitplan / zeiten aufschreiben
 		//TODO: Zukunfts-Ausblick: Fehler finden / Korrigieren -> Endpoint POST-request true/false :D 
 		StartMVC mainRunMVC = new StartMVC();
-		//http://www.java-examples.com/create-awt-choice-or-combobox-example
-
 	}
 
 }

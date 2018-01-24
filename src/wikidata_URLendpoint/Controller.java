@@ -8,10 +8,11 @@ class Controller implements ActionListener {
 	View view;
 
 	Controller() {	
-		
+//		System.out.println("Controler");
 	} 
 	
 	public void actionPerformed(ActionEvent e){
+		System.out.println("Action performed");
 		model.translation(view.getTerm());
 	}
 	public void addModel(Model m){

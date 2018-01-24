@@ -31,7 +31,8 @@ class View implements Observer {
 	private Model model;		
 	
 	View() {
-		//System.out.println("View()");	
+//		System.out.println("View()");	
+		
 		mainFrame = new Frame("Mighty Translator");
 	    mainFrame.setSize(800,400);
 	    mainFrame.setLocation(200, 200);
@@ -87,10 +88,15 @@ class View implements Observer {
     	String[] translations = model.getTranslations();
     	String[] descriptions = model.getDescriptions();
     	String[] wikiContent = model.getWikiContent();
-    	
+    	String bugtest = "";
     	for(int i = 0; i < translations.length; i++) {
     		txa_output.append(translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n");
+    		bugtest += translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n";
     	}
+    	
+    	System.out.println("update() called");
+    	System.out.println("bugtest: " + bugtest);
+    	txa_output.repaint();
     }
 	
     public String getTerm() {
