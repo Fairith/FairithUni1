@@ -69,6 +69,7 @@ public class Model extends Observable {
 	
 	public void translation(String term) {
 		String toTranslate = term;
+		int rlength = 0;
 		//TODO: für's schnellere Testen; Später löschen.
 		if(toTranslate=="") {
 			toTranslate = "Isomorphism";
@@ -88,10 +89,12 @@ public class Model extends Observable {
 		try {
 	        Endpoint ep = new Endpoint("https://query.wikidata.org/sparql", true);
 	        HashMap result = ep.query(querySelect);
+	        
+	        rlength = resultLength(result);
 	  		
-	        setTranslations(extractTranslations(result));
-	        setDescriptions(extractDescriptions(result));
-	        setLinks(extractLinks(result));
+	        setTranslations(extractTranslations(result, rlength));
+	        setDescriptions(extractDescriptions(result, rlength));
+	        setLinks(extractLinks(result, rlength));
 	        setWikiContent(extractWikiContent(getLinks()));
 	        
 	        setChanged();
@@ -103,12 +106,16 @@ public class Model extends Observable {
 	      }
 	}
 	
-	private String[] extractLinks(HashMap<String, HashMap> hs) {
-		int size = 0;
-		int i = 0;
+	private int resultLength(HashMap<String, HashMap> hs) {
+		int toReturn = 0;
 		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
-		  size++;
-	    }
+			  toReturn++;
+		    }
+		return toReturn;
+	}
+	
+	private String[] extractLinks(HashMap<String, HashMap> hs, int size) {
+		int i = 0;
 		String[] toReturn = new String[size];
 		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
 		  toReturn[i] = (String) value.get("link");
@@ -117,12 +124,8 @@ public class Model extends Observable {
 		return toReturn;
 	}
 	
-	private String[] extractTranslations(HashMap<String, HashMap> hs) {
-		int size = 0;
+	private String[] extractTranslations(HashMap<String, HashMap> hs, int size) {
 		int i = 0;
-		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
-		  size++;
-	    }
 		String[] toReturn = new String[size];
 		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
 		  toReturn[i] = (String) value.get("lang2");
@@ -131,12 +134,8 @@ public class Model extends Observable {
 		return toReturn;
 	}
 	
-	private String[] extractDescriptions(HashMap<String, HashMap> hs) {
-		int size = 0;
+	private String[] extractDescriptions(HashMap<String, HashMap> hs, int size) {
 		int i = 0;
-		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
-		  size++;
-	    }
 		String[] toReturn = new String[size];
 		for (HashMap<String, Object> value : (ArrayList<HashMap<String, Object>>) hs.get("result").get("rows")) {
 		  toReturn[i] = (String) value.get("desc");
