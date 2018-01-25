@@ -14,12 +14,14 @@ public class StartMVC {
 		
 		myView.addController(myController);
 		myView.addModel(myModel);
+		
+		myModel.init(); //not a fix, only a workaround
 
 	}
 	
 	public static void main(String[] args){
 		//TODO: Zeitplan / zeiten aufschreiben
-		//TODO: Zukunfts-Ausblick: Fehler finden / Korrigieren -> Endpoint POST-request true/false :D 
+		//TODO: Zukunfts-Ausblick: Fehler in Wikidata finden / Korrigieren -> Endpoint POST-request true/false :D 
 		StartMVC mainRunMVC = new StartMVC();
 	}
 

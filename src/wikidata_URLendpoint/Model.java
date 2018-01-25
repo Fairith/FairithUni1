@@ -28,6 +28,12 @@ public class Model extends Observable {
 //		System.out.println("Model");
 	}
 	
+	public void init() {
+		translation(""); // workaround, not a fix
+	}
+	
+	// ------------------------------------------------------- \\
+	
 	public void setLinks(String[] s) {
 		this.links = s;
 	}
@@ -70,11 +76,6 @@ public class Model extends Observable {
 	public void translation(String term) {
 		String toTranslate = term;
 		int rlength = 0;
-		//TODO: für's schnellere Testen; Später löschen.
-		if(toTranslate=="") {
-			toTranslate = "Isomorphism";
-		}
-	    //String targetLanguage = "de";
 		
 	    String querySelect = "SELECT ?itemurl ?link ?lang1 ?lang2 ?desc WHERE {\n" +
 	            "  ?itemurl rdfs:label ?lang1 ,\n" +
@@ -87,7 +88,7 @@ public class Model extends Observable {
 	            "}";
 		
 		try {
-	        Endpoint ep = new Endpoint("https://query.wikidata.org/sparql", true);
+	        Endpoint ep = new Endpoint("https://query.wikidata.org/sparql", true); //ReadOnly (true/false)
 	        HashMap result = ep.query(querySelect);
 	        
 	        rlength = resultLength(result);

@@ -18,8 +18,6 @@ class View implements Observer {
 
 	private Frame mainFrame;
 	private Label headerLabel;
-	private Label tmp1;
-	private Label tmp2;
 	private Panel controlPanel;
 	private Panel headPanel;
 	private Button btn_translate;
@@ -40,8 +38,6 @@ class View implements Observer {
 	    
 	    headerLabel = new Label("Enter an english term to translate");
 	    headerLabel.setAlignment(Label.CENTER);
-	    tmp1 = new Label("temp1");
-	    tmp2 = new Label("temp2");
 	    
 	    originLanguage = new Choice();
 	    originLanguage.add("de");
@@ -79,15 +75,14 @@ class View implements Observer {
 	    mainFrame.addWindowListener(new CloseListener());
 	    mainFrame.setVisible(true);
 	}
-    
+	
 	public void update(Observable obs, Object obj) {
-		
-    	txa_output.setText("");
     	model.setOriginLanguage(originLanguage.getSelectedItem());
     	model.setTargetLanguage(targetLanguage.getSelectedItem());
     	String[] translations = model.getTranslations();
     	String[] descriptions = model.getDescriptions();
     	String[] wikiContent = model.getWikiContent();
+    	txa_output.setText("");
     	String bugtest = "";
     	for(int i = 0; i < translations.length; i++) {
     		txa_output.append(translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n");
@@ -96,7 +91,6 @@ class View implements Observer {
     	
     	System.out.println("update() called");
     	System.out.println("bugtest: " + bugtest);
-    	txa_output.repaint();
     }
 	
     public String getTerm() {
