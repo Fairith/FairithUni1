@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.util.Observer;
 
 
-class View implements Observer {
+class OldView implements Observer {
 
 	private Frame mainFrame;
 	private Label headerLabel;
@@ -28,7 +28,7 @@ class View implements Observer {
 
 	private Model model;		
 	
-	View() {
+	OldView() {
 //		System.out.println("View()");	
 		
 		mainFrame = new Frame("Mighty Translator");
