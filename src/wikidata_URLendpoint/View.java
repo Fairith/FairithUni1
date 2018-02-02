@@ -17,16 +17,18 @@ import javax.swing.JComboBox;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JEditorPane;
 
 public class View extends JFrame implements Observer {
 
 	private JPanel contentPane;
 	private JTextField txf_input;
-	private JTextArea txa_output;
+	private JEditorPane jep_output;
 	private JButton btn_translate;
 	private JComboBox comboBox_targetLanguage;
 	private JComboBox comboBox_originLanguage;
@@ -112,21 +114,27 @@ public class View extends JFrame implements Observer {
 		comboBox_targetLanguage.setModel(new DefaultComboBoxModel(new String[] {"DE", "EN", "FR"}));
 		comboBox_targetLanguage.setSelectedIndex(1);
 		
-		txa_output = new JTextArea();
+		jep_output = new JEditorPane();
+		jep_output.setOpaque(false);
+		jep_output.setEditable(false);
+		jep_output.setContentType("text/html");
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addComponent(comboBox_targetLanguage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addComponent(txa_output, GroupLayout.PREFERRED_SIZE, 820, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(736, Short.MAX_VALUE))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(10)
+					.addComponent(jep_output, GroupLayout.DEFAULT_SIZE, 842, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addComponent(comboBox_targetLanguage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(383, Short.MAX_VALUE))
-				.addComponent(txa_output, GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(jep_output, GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
 		contentPane.setLayout(gl_contentPane);
@@ -151,11 +159,21 @@ public class View extends JFrame implements Observer {
     	model.setTargetLanguage(comboBox_targetLanguage.getSelectedItem().toString().toLowerCase());
     	String[] translations = model.getTranslations();
     	String[] descriptions = model.getDescriptions();
+    	String[] links = model.getLinks();
     	String[] wikiContent = model.getWikiContent();
-    	txa_output.setText("");
+    	jep_output.setText("");
+    	//jep_output.updateUI(); //test if text doesn't update
     	String bugtest = "";
     	for(int i = 0; i < translations.length; i++) {
-    		txa_output.append(translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n");
+    		/**
+    		 * TODO: append text and links / urls here
+    		 * https://stackoverflow.com/questions/16444170/clickable-html-link-in-jeditorpane-but-using-replaceselcetion-methode?noredirect=1&lq=1
+    		 * https://stackoverflow.com/questions/14170041/is-it-possible-to-create-programs-in-java-that-create-text-to-link-in-chrome/14170141#14170141
+    		 * https://stackoverflow.com/questions/4059198/jtextpane-appending-a-new-string
+    		 * http://www.dreamincode.net/forums/blog/1644/entry-3367-how-to-append-to-a-html-jeditorpane/
+    		 * 
+    		 */
+    		//text: <Translation>: + ~100 Zeichen Wiki Description + "..." + link "read more"
     		bugtest += translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n";
     	}
     	
