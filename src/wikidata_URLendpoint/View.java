@@ -22,7 +22,7 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.DefaultComboBoxModel;
 
-public class NewView extends JFrame implements Observer {
+public class View extends JFrame implements Observer {
 
 	private JPanel contentPane;
 	private JTextField txf_input;
@@ -52,7 +52,7 @@ public class NewView extends JFrame implements Observer {
 	/**
 	 * Create the frame.
 	 */
-	public NewView() {
+	public View() {
 		setTitle("Mighty Translator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 600);

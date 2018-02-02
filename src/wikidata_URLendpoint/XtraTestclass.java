@@ -15,7 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 
-public class Main {
+public class XtraTestclass {
 
   public static void main(String[] args) {
 	  Scanner input = new Scanner(System.in);

@@ -5,7 +5,7 @@ public class StartMVC {
 	public StartMVC() {
 
 		Model myModel 	= new Model();
-		NewView myView 	= new NewView();
+		View myView 	= new View();
 		myModel.addObserver(myView);
 		
 		Controller myController = new Controller();
