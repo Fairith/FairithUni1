@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 
 class Controller implements ActionListener {
 	Model model;
-	OldView view;
+	NewView view;
 
 	Controller() {	
 //		System.out.println("Controler");
@@ -19,7 +19,7 @@ class Controller implements ActionListener {
 		this.model = m;
 	}
 
-	public void addView(OldView v){
+	public void addView(NewView v){
 		this.view = v;
 	}
 } 

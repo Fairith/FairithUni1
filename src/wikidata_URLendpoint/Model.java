@@ -28,6 +28,8 @@ public class Model extends Observable {
 //		System.out.println("Model");
 	}
 	
+	// ------------------------------------------------------- \\
+	
 	public void init() {
 		translation(""); // workaround, not a fix
 	}

@@ -2,6 +2,9 @@ package wikidata_URLendpoint;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,29 +22,32 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.DefaultComboBoxModel;
 
-public class NewView extends JFrame {
+public class NewView extends JFrame implements Observer {
 
 	private JPanel contentPane;
 	private JTextField txf_input;
 	private JTextArea txa_output;
+	private JButton btn_translate;
+	private JComboBox comboBox_targetLanguage;
+	private JComboBox comboBox_originLanguage;
 	
 	private Model model;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					NewView frame = new NewView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					NewView frame = new NewView();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
@@ -59,13 +65,14 @@ public class NewView extends JFrame {
 		txf_input = new JTextField();
 		txf_input.setColumns(10);
 		
-		JComboBox comboBox_originLanguage = new JComboBox();
+		comboBox_originLanguage = new JComboBox();
 		comboBox_originLanguage.setModel(new DefaultComboBoxModel(new String[] {"DE", "EN", "FR"}));
 		
-		JButton btn_translate = new JButton("Translate");
+		btn_translate = new JButton("Translate");
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Results", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -101,8 +108,9 @@ public class NewView extends JFrame {
 					.addContainerGap())
 		);
 		
-		JComboBox comboBox_targetLanguage = new JComboBox();
+		comboBox_targetLanguage = new JComboBox();
 		comboBox_targetLanguage.setModel(new DefaultComboBoxModel(new String[] {"DE", "EN", "FR"}));
+		comboBox_targetLanguage.setSelectedIndex(1);
 		
 		txa_output = new JTextArea();
 		GroupLayout gl_panel = new GroupLayout(panel);
@@ -122,5 +130,36 @@ public class NewView extends JFrame {
 		);
 		panel.setLayout(gl_panel);
 		contentPane.setLayout(gl_contentPane);
+		
+		//setVisible(true);
 	}
+	
+	public void addModel(Model m) {
+		this.model = m;
+	}
+	
+	public void addController(ActionListener c) {
+		btn_translate.addActionListener(c);
+	}
+	
+	public String getTerm() {
+		return this.txf_input.getText();
+	}
+
+	public void update(Observable obs, Object obj) {
+    	model.setOriginLanguage(comboBox_originLanguage.getSelectedItem().toString().toLowerCase());
+    	model.setTargetLanguage(comboBox_targetLanguage.getSelectedItem().toString().toLowerCase());
+    	String[] translations = model.getTranslations();
+    	String[] descriptions = model.getDescriptions();
+    	String[] wikiContent = model.getWikiContent();
+    	txa_output.setText("");
+    	String bugtest = "";
+    	for(int i = 0; i < translations.length; i++) {
+    		txa_output.append(translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n");
+    		bugtest += translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n";
+    	}
+    	
+    	System.out.println("update() called");
+    	System.out.println("bugtest: " + bugtest);
+    }
 }
