@@ -17,9 +17,15 @@ import javax.swing.JComboBox;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.UIManager;
 import java.awt.Color;
+import java.awt.Desktop;
+
 import javax.swing.JTextArea;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JEditorPane;
@@ -32,6 +38,7 @@ public class View extends JFrame implements Observer {
 	private JButton btn_translate;
 	private JComboBox comboBox_targetLanguage;
 	private JComboBox comboBox_originLanguage;
+	private String toPrint;
 	
 	private Model model;
 
@@ -118,6 +125,20 @@ public class View extends JFrame implements Observer {
 		jep_output.setOpaque(false);
 		jep_output.setEditable(false);
 		jep_output.setContentType("text/html");
+		jep_output.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent hle) {
+                if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
+                    System.out.println(hle.getURL());
+                    Desktop desktop = Desktop.getDesktop();
+                    try {
+                        desktop.browse(hle.getURL().toURI());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
 		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
@@ -153,7 +174,7 @@ public class View extends JFrame implements Observer {
 	public String getTerm() {
 		return this.txf_input.getText();
 	}
-
+	
 	public void update(Observable obs, Object obj) {
     	model.setOriginLanguage(comboBox_originLanguage.getSelectedItem().toString().toLowerCase());
     	model.setTargetLanguage(comboBox_targetLanguage.getSelectedItem().toString().toLowerCase());
@@ -164,19 +185,22 @@ public class View extends JFrame implements Observer {
     	jep_output.setText("");
     	//jep_output.updateUI(); //test if text doesn't update
     	String bugtest = "";
+    	toPrint = "";
     	for(int i = 0; i < translations.length; i++) {
-    		/**
-    		 * TODO: append text and links / urls here
-    		 * https://stackoverflow.com/questions/16444170/clickable-html-link-in-jeditorpane-but-using-replaceselcetion-methode?noredirect=1&lq=1
-    		 * https://stackoverflow.com/questions/14170041/is-it-possible-to-create-programs-in-java-that-create-text-to-link-in-chrome/14170141#14170141
-    		 * https://stackoverflow.com/questions/4059198/jtextpane-appending-a-new-string
-    		 * http://www.dreamincode.net/forums/blog/1644/entry-3367-how-to-append-to-a-html-jeditorpane/
-    		 * 
-    		 */
+    		toPrint += "\" " + translations[i] + "\"" + ": ";
+    		if(wikiContent[i].length() < 90) { //because nothing can be easy
+    			toPrint += wikiContent[i];
+    		}else {
+    			toPrint += wikiContent[i].substring(0,90);
+    		}
+    		toPrint += "...";
+    		toPrint +="<a href='";
+    		toPrint += links[i];
+    		toPrint +="'>[continue reading]</a>" + "<br>";
     		//text: <Translation>: + ~100 Zeichen Wiki Description + "..." + link "read more"
     		bugtest += translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n";
     	}
-    	
+    	jep_output.setText(toPrint);
     	System.out.println("update() called");
     	System.out.println("bugtest: " + bugtest);
     }
