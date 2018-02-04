@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.HyperlinkEvent;
@@ -79,6 +80,7 @@ public class View extends JFrame implements Observer {
 		
 		btn_translate = new JButton("Translate");
 		
+		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Results", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
@@ -101,6 +103,7 @@ public class View extends JFrame implements Observer {
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 864, Short.MAX_VALUE)
 					.addContainerGap())
 		);
+		SwingUtilities.getRootPane(btn_translate).setDefaultButton(btn_translate);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
@@ -129,7 +132,7 @@ public class View extends JFrame implements Observer {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent hle) {
                 if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
-                    System.out.println(hle.getURL());
+                    //System.out.println(hle.getURL());
                     Desktop desktop = Desktop.getDesktop();
                     try {
                         desktop.browse(hle.getURL().toURI());

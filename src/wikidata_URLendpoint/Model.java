@@ -87,6 +87,7 @@ public class Model extends Observable {
 	            "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
 	            "  VALUES ?lang1 {\""+ toTranslate +"\"@"+originLanguage +"} .\n" +
 	            "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
+	            "  FILTER NOT EXISTS{?itemurl wdt:P31 wd:Q4167410 } .\n" + //removes disambiguations
 	            "}";
 		
 		try {
