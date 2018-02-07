@@ -121,7 +121,7 @@ public class View extends JFrame implements Observer {
 		);
 		
 		comboBox_targetLanguage = new JComboBox();
-		comboBox_targetLanguage.setModel(new DefaultComboBoxModel(new String[] {"DE", "EN", "FR"}));
+		comboBox_targetLanguage.setModel(new DefaultComboBoxModel(new String[] {"DE", "EN", "FR", "RU"}));
 		comboBox_targetLanguage.setSelectedIndex(1);
 		
 		jep_output = new JEditorPane();
