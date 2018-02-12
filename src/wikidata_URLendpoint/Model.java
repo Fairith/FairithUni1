@@ -76,7 +76,21 @@ public class Model extends Observable {
 	}
 	
 	public void translation(String term) {
-		String toTranslate = term;
+		String toTranslateUC = "";
+		String toTranslateLC = "";
+		
+		if(term.length() < 1) { //because nothing can be easy; first letter upper case
+			toTranslateUC += term;
+		}else {
+			toTranslateUC += term.substring(0,1).toUpperCase() + term.substring(1);
+		}
+		
+		if(term.length() < 1) { //because nothing can be easy; first letter lower case
+			toTranslateLC += term;
+		}else {
+			toTranslateLC += term.substring(0,1).toLowerCase() + term.substring(1);
+		}
+		//System.out.println(toTranslateUC + " | " + toTranslateLC);
 		int rlength = 0;
 		
 	    String querySelect = "SELECT ?itemurl ?link ?lang1 ?lang2 ?desc WHERE {\n" +
@@ -85,7 +99,7 @@ public class Model extends Observable {
 	            "  OPTIONAL {?itemurl schema:description ?desc. FILTER (LANG(?desc) = \"" + targetLanguage +"\").}\n" +
 	            "  OPTIONAL {?link schema:about ?itemurl ; schema:isPartOf <https://"+ targetLanguage +".wikipedia.org/> .}\n" +
 	            "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
-	            "  VALUES ?lang1 {\""+ toTranslate +"\"@"+originLanguage +"} .\n" +
+	            "  VALUES (?lang1) {(\""+ toTranslateUC +"\"@"+originLanguage +") (\""+ toTranslateLC +"\"@"+originLanguage +")} .\n" +
 	            "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
 	            "  FILTER NOT EXISTS{?itemurl wdt:P31 wd:Q4167410 } .\n" + //removes disambiguations
 	            "}";
@@ -104,7 +118,7 @@ public class Model extends Observable {
 	        setChanged();
 	        notifyObservers();
 	          
-	      }catch(EndpointException eex) {
+	      } catch(EndpointException eex) {
 	          System.out.println(eex);
 	          eex.printStackTrace();
 	      }
@@ -157,8 +171,8 @@ public class Model extends Observable {
 				Element firstParagraph = paragraphs.first();
 				//Element lastParagraph = paragraphs.last();
 				Element p;
-				int j=1;
-				p=firstParagraph;
+				int j = 1;
+				p = firstParagraph;
 				toReturn[i] = p.text();
 //				System.out.println(p.text());
 //				while (p!=lastParagraph){
