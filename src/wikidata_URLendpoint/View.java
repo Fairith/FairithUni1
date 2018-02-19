@@ -190,7 +190,7 @@ public class View extends JFrame implements Observer {
     	String bugtest = "";
     	toPrint = "";
     	for(int i = 0; i < translations.length; i++) {
-    		toPrint += "\" " + translations[i] + "\"" + ": ";
+    		toPrint += "<strong>" + translations[i] + "</strong>" + ": ";
     		if(wikiContent[i].length() < 90) { //because nothing can be easy
     			toPrint += wikiContent[i];
     		}else {
