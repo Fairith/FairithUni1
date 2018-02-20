@@ -19,8 +19,8 @@ public class XtraTestclass {
 
   public static void main(String[] args) {
 	  Scanner input = new Scanner(System.in);
-      String toTranslate = "Isomorphism";
-      String targetLanguage = "de";
+      String toTranslate = "Boxen";
+      String targetLanguage = "en";
 	  //System.out.println("Enter English Word to translate: ");
 	  //toTranslate = input.next();
 	  
@@ -33,7 +33,7 @@ public class XtraTestclass {
                   "  OPTIONAL {?itemurl schema:description ?desc. FILTER (LANG(?desc) = \"" + targetLanguage +"\").}\n" +
                   "  OPTIONAL {?link schema:about ?itemurl ; schema:isPartOf <https://"+ targetLanguage +".wikipedia.org/> .}\n" +
                   "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
-                  "  VALUES ?lang1 {\""+ toTranslate +"\"@en} .\n" +
+                  "  VALUES ?lang1 {\""+ toTranslate +"\"@de} .\n" +
                   "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
                   "}";
           

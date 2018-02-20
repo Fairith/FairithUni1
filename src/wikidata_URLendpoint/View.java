@@ -178,6 +178,10 @@ public class View extends JFrame implements Observer {
 		return this.txf_input.getText();
 	}
 	
+	public void setOutputText(String text) { //maybe delete later
+		jep_output.setText(text);
+	}
+	
 	public void update(Observable obs, Object obj) {
     	model.setOriginLanguage(comboBox_originLanguage.getSelectedItem().toString().toLowerCase());
     	model.setTargetLanguage(comboBox_targetLanguage.getSelectedItem().toString().toLowerCase());
@@ -185,23 +189,37 @@ public class View extends JFrame implements Observer {
     	String[] descriptions = model.getDescriptions();
     	String[] links = model.getLinks();
     	String[] wikiContent = model.getWikiContent();
+    	String urlError = model.getUrlErrorMessage();
     	jep_output.setText("");
     	//jep_output.updateUI(); //test if text doesn't update
     	String bugtest = "";
     	toPrint = "";
     	for(int i = 0; i < translations.length; i++) {
-    		toPrint += "<strong>" + translations[i] + "</strong>" + ": ";
-    		if(wikiContent[i].length() < 90) { //because nothing can be easy
-    			toPrint += wikiContent[i];
-    		}else {
-    			toPrint += wikiContent[i].substring(0,90);
+    		if(wikiContent[i] == null) { //Error Handling I
+    			toPrint += "<strong>" + translations[i] + "</strong>" + ": " + urlError + "<br>";
+    		}else if(wikiContent[i].equals(urlError)) { //Error Handling II
+    			toPrint += "<strong>" + translations[i] + "</strong>" + ": ";
+	    		if(wikiContent[i].length() < 90) { //because nothing can be easy
+	    			toPrint += wikiContent[i];
+	    		}else {
+	    			toPrint += wikiContent[i].substring(0,90);
+	    		}
+	    		toPrint += "<br>";
+	    		bugtest += translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n";
+    		} else {
+	    		toPrint += "<strong>" + translations[i] + "</strong>" + ": ";
+	    		if(wikiContent[i].length() < 90) { //because nothing can be easy
+	    			toPrint += wikiContent[i];
+	    		}else {
+	    			toPrint += wikiContent[i].substring(0,90);
+	    		}
+	    		toPrint += "...";
+	    		toPrint +="<a href='";
+	    		toPrint += links[i];
+	    		toPrint +="'>[continue reading]</a>" + "<br>";
+	    		//text: <Translation>: + ~100 Zeichen Wiki Description + "..." + link "read more"
+	    		bugtest += translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n";
     		}
-    		toPrint += "...";
-    		toPrint +="<a href='";
-    		toPrint += links[i];
-    		toPrint +="'>[continue reading]</a>" + "<br>";
-    		//text: <Translation>: + ~100 Zeichen Wiki Description + "..." + link "read more"
-    		bugtest += translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n";
     	}
     	jep_output.setText(toPrint);
     	System.out.println("update() called");

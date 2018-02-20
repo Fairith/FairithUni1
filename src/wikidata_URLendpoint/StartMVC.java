@@ -16,8 +16,10 @@ public class StartMVC {
 		myView.addModel(myModel);
 		
 		myView.setVisible(true);
-		myModel.init(); //not a fix, only a workaround
 		
+		myView.setOutputText("initializing ... ");
+		myModel.init(); //not a fix, only a workaround
+		myView.setOutputText("initialization complete!");
 
 	}
 	

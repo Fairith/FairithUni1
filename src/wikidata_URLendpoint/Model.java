@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jsoup.Connection.Response;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,6 +25,7 @@ public class Model extends Observable {
 	private String[] links;
 	private String originLanguage = "en";
 	private String targetLanguage = "de";
+	private String urlErrorMessage = "<em>An incorrect or missing Wikidata url was encountered.</em>";
 	
 	public Model(){
 //		System.out.println("Model");
@@ -75,6 +78,10 @@ public class Model extends Observable {
 		return this.wikiContent;
 	}
 	
+	public String getUrlErrorMessage() {
+		return this.urlErrorMessage;
+	}
+	
 	public void translation(String term) {
 		String toTranslateUC = "";
 		String toTranslateLC = "";
@@ -109,19 +116,19 @@ public class Model extends Observable {
 	        HashMap result = ep.query(querySelect);
 	        
 	        rlength = resultLength(result);
-	  		
+	        
 	        setTranslations(extractTranslations(result, rlength));
 	        setDescriptions(extractDescriptions(result, rlength));
 	        setLinks(extractLinks(result, rlength));
 	        setWikiContent(extractWikiContent(getLinks()));
-	        
+	  		
 	        setChanged();
 	        notifyObservers();
-	          
+	  		
 	      } catch(EndpointException eex) {
 	          System.out.println(eex);
 	          eex.printStackTrace();
-	      }
+	      } 
 	}
 	
 	private int resultLength(HashMap<String, HashMap> hs) {
@@ -164,8 +171,9 @@ public class Model extends Observable {
 	
 	private String[] extractWikiContent(String[] urls) {
 		String[] toReturn = new String[urls.length];
+		int i = 0;
 		try {
-			for(int i = 0; i < urls.length; i++) {
+			for(i = 0; i < urls.length; i++) {
 				Document doc = Jsoup.connect(urls[i]).get();
 				Elements paragraphs = doc.select(".mw-content-ltr p");	
 				Element firstParagraph = paragraphs.first();
@@ -184,6 +192,8 @@ public class Model extends Observable {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IllegalArgumentException iae) {
+			toReturn[i] = urlErrorMessage;
 		}
 		return toReturn;
 	}
