@@ -4,7 +4,12 @@ import com.bordercloud.sparql.Endpoint;
 import com.bordercloud.sparql.EndpointException;
 
 import java.util.Observable;
+
+import javax.naming.TimeLimitExceededException;
+
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,6 +31,7 @@ public class Model extends Observable {
 	private String originLanguage = "en";
 	private String targetLanguage = "de";
 	private String urlErrorMessage = "<em>An incorrect or missing Wikidata url was encountered.</em>";
+	private String linkErrorMessage = "<em>No Wikipedia Link on Wikidata was found</em>";
 	
 	public Model(){
 //		System.out.println("Model");
@@ -55,11 +61,11 @@ public class Model extends Observable {
 		this.descriptions = s;
 	}
 	public void setOriginLanguage(String orgLng) {
-		this.originLanguage = orgLng;
+		originLanguage = orgLng; //test ob 'this.' einen Unterschied macht
 	}
 	
 	public void setTargetLanguage(String trgLng) {
-		this.targetLanguage = trgLng;
+		targetLanguage = trgLng; //test ob 'this.' einen Unterschied macht
 	}
 // ------------------------------------------------------- \\
 	public String[] getTranslations() {
@@ -80,6 +86,10 @@ public class Model extends Observable {
 	
 	public String getUrlErrorMessage() {
 		return this.urlErrorMessage;
+	}
+	
+	public String getLinkErrorMessage() {
+		return this.linkErrorMessage;
 	}
 	
 	public void translation(String term) {
@@ -128,7 +138,7 @@ public class Model extends Observable {
 	      } catch(EndpointException eex) {
 	          System.out.println(eex);
 	          eex.printStackTrace();
-	      } 
+	      }
 	}
 	
 	private int resultLength(HashMap<String, HashMap> hs) {
@@ -174,20 +184,26 @@ public class Model extends Observable {
 		int i = 0;
 		try {
 			for(i = 0; i < urls.length; i++) {
-				Document doc = Jsoup.connect(urls[i]).get();
-				Elements paragraphs = doc.select(".mw-content-ltr p");	
-				Element firstParagraph = paragraphs.first();
-				//Element lastParagraph = paragraphs.last();
-				Element p;
-				int j = 1;
-				p = firstParagraph;
-				toReturn[i] = p.text();
-//				System.out.println(p.text());
-//				while (p!=lastParagraph){
-//				    p=paragraphs.get(i);
-//				    System.out.println(p.text());
-//				    i++;
-//				}
+				if(urls[i] == null) {
+					toReturn[i] = linkErrorMessage;
+				} else {
+					Document doc = Jsoup.connect(urls[i]).get();
+					Elements paragraphs = doc.select(".mw-content-ltr p");	
+					Element firstParagraph = paragraphs.first();
+					//Element lastParagraph = paragraphs.last();
+					Element p;
+					p = firstParagraph;
+					toReturn[i] = p.text();
+					
+					/**
+					System.out.println(p.text());
+					while (p!=lastParagraph){
+					    p=paragraphs.get(i);
+					    System.out.println(p.text());
+					    i++;
+					}
+					 **/
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

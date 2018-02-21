@@ -190,6 +190,7 @@ public class View extends JFrame implements Observer {
     	String[] links = model.getLinks();
     	String[] wikiContent = model.getWikiContent();
     	String urlError = model.getUrlErrorMessage();
+    	String missingLinkError = model.getLinkErrorMessage();
     	jep_output.setText("");
     	//jep_output.updateUI(); //test if text doesn't update
     	String bugtest = "";
@@ -197,13 +198,9 @@ public class View extends JFrame implements Observer {
     	for(int i = 0; i < translations.length; i++) {
     		if(wikiContent[i] == null) { //Error Handling I
     			toPrint += "<strong>" + translations[i] + "</strong>" + ": " + urlError + "<br>";
-    		}else if(wikiContent[i].equals(urlError)) { //Error Handling II
+    		}else if(wikiContent[i].equals(urlError) || wikiContent[i].equals(missingLinkError)) { //Error Handling II
     			toPrint += "<strong>" + translations[i] + "</strong>" + ": ";
-	    		if(wikiContent[i].length() < 90) { //because nothing can be easy
-	    			toPrint += wikiContent[i];
-	    		}else {
-	    			toPrint += wikiContent[i].substring(0,90);
-	    		}
+	    		toPrint += wikiContent[i];
 	    		toPrint += "<br>";
 	    		bugtest += translations[i] + " | " + descriptions[i] + " | " + wikiContent[i] + "\n";
     		} else {
