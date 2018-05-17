@@ -115,7 +115,7 @@ public class Model extends Observable {
 	            "        ?lang2 .\n" +
 	            "  OPTIONAL {?itemurl schema:description ?desc. FILTER (LANG(?desc) = \"" + targetLanguage +"\").}\n" +
 	            "  OPTIONAL {?link schema:about ?itemurl ; schema:isPartOf <https://"+ targetLanguage +".wikipedia.org/> .}\n" +
-	            "  MINUS {?itemurl wdt:P31 wd:Q4167836 } . # no category items\n" +
+	            "  MINUS {?itemurl wdt:P31 wd:Q4167836 } .\n" + //no category items
 	            "  VALUES (?lang1) {(\""+ toTranslateUC +"\"@"+originLanguage +") (\""+ toTranslateLC +"\"@"+originLanguage +")} .\n" +
 	            "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
 	            "  FILTER NOT EXISTS{?itemurl wdt:P31 wd:Q4167410 } .\n" + //removes disambiguations
@@ -190,10 +190,7 @@ public class Model extends Observable {
 					Document doc = Jsoup.connect(urls[i]).get();
 					Elements paragraphs = doc.select(".mw-content-ltr p");	
 					Element firstParagraph = paragraphs.first();
-					//Element lastParagraph = paragraphs.last();
-					Element p;
-					p = firstParagraph;
-					toReturn[i] = p.text();
+					toReturn[i] = firstParagraph.text();
 					
 					/**
 					System.out.println(p.text());
