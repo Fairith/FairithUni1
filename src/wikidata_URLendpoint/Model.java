@@ -118,20 +118,21 @@ public class Model extends Observable {
 	            "  MINUS {?itemurl wdt:P31 wd:Q4167836 } .\n" + //no category items
 	            "  VALUES (?lang1) {(\""+ toTranslateUC +"\"@"+originLanguage +") (\""+ toTranslateLC +"\"@"+originLanguage +")} .\n" +
 	            "  FILTER(LANG(?lang2) = \"" + targetLanguage +"\").\n" +
-	            "  FILTER NOT EXISTS{?itemurl wdt:P31 wd:Q4167410 } .\n" + //removes disambiguations
+	            "  MINUS{?itemurl wdt:P31 wd:Q4167410 } .\n" + //removes disambiguations
 	            "}";
-		
+		//"  FILTER NOT EXISTS{?itemurl wdt:P31 wd:Q4167410 } .\n" + //removes disambiguations
 		try {
-	        Endpoint ep = new Endpoint("https://query.wikidata.org/sparql", true); //ReadOnly (true/false)
-	        HashMap result = ep.query(querySelect);
-	        
-	        rlength = resultLength(result);
+			Endpoint ep = new Endpoint("https://query.wikidata.org/sparql", true); //ReadOnly (true/false)
+		    HashMap result = ep.query(querySelect);
+		   
+		    rlength = resultLength(result);
 	        
 	        setTranslations(extractTranslations(result, rlength));
 	        setDescriptions(extractDescriptions(result, rlength));
 	        setLinks(extractLinks(result, rlength));
 	        setWikiContent(extractWikiContent(getLinks()));
-	  		
+			
+	        
 	        setChanged();
 	        notifyObservers();
 	  		

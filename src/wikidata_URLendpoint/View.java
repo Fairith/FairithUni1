@@ -63,7 +63,7 @@ public class View extends JFrame implements Observer {
 	 * Create the frame.
 	 */
 	public View() {
-		setTitle("Mighty Translator");
+		setTitle("Technical Term Translator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 600);
 		contentPane = new JPanel();
@@ -191,6 +191,7 @@ public class View extends JFrame implements Observer {
     	String[] wikiContent = model.getWikiContent();
     	String urlError = model.getUrlErrorMessage();
     	String missingLinkError = model.getLinkErrorMessage();
+		
     	jep_output.setText("");
     	//jep_output.updateUI(); //test if text doesn't update
     	String bugtest = "";
